@@ -83,6 +83,7 @@
 (declare-function lsp-describe-session 'lsp-mode)
 (declare-function lsp-workspace-folders-open 'lsp-mode)
 (declare-function lsp-workspace-restart 'lsp-mode)
+(declare-function lsp-workspace-root 'lsp-mode)
 (declare-function lsp-workspace-shutdown 'lsp-mode)
 (declare-function lsp-workspaces 'lsp-mode)
 (declare-function mc/num-cursors 'multiple-cursors-core)
@@ -196,7 +197,7 @@ directory, the file name, and its state (modified, read-only or non-existent)."
                                 (t 'mode-line-inactive)))))
 
 (doom-modeline-def-segment buffer-default-directory
-  "Displays `default-directory' with the icon and state . This is for special buffers
+  "Displays `default-directory' . This is for special buffers
 like the scratch buffer where knowing the current project directory is important."
   (concat
    (doom-modeline-spc)
@@ -300,7 +301,7 @@ buffer where knowing the current project directory is important."
 
 (defvar-local doom-modeline--vcs-state nil)
 (defun doom-modeline-update-vcs-state (&rest _)
-  "Update icon of vcs state in mode-line."
+  "Update vcs state in mode-line."
   (setq doom-modeline--vcs-state
         (when (and vc-mode buffer-file-name)
           (let* ((backend (vc-backend buffer-file-name))
@@ -353,8 +354,8 @@ buffer where knowing the current project directory is important."
         (concat
          (if active
              state
-           (doom-modeline-propertize-icon state 'mode-line-inactive))
-         (doom-modeline-vspc)))
+           (propertize state 'face 'mode-line-inactive))
+         (doom-modeline-spc)))
        (if active
            text
          (propertize text 'face 'mode-line-inactive))
@@ -575,9 +576,11 @@ level."
 (doom-modeline-def-segment misc-info
   "Mode line construct for miscellaneous information.
 By default, this shows the information specified by `global-mode-string'."
-  (when (and (doom-modeline--active)
-             (not doom-modeline--limited-width-p))
-    '("" mode-line-misc-info)))
+  (when (doom-modeline--active)
+    `((t mode-line-misc-info)
+      ,(propertize
+        (or doom-modeline--project-parent-path default-directory)
+        'face font-lock-doc-face))))
 
 
 ;;
@@ -665,9 +668,13 @@ See `mode-line-percent-position'.")
 (defun doom-modeline-update-lsp (&rest _)
   "Update `lsp-mode' state."
   (setq doom-modeline--lsp
-        (propertize "LSP" 'face (if (lsp-workspaces)
-                                    'doom-modeline-lsp-success
-                                  'doom-modeline-lsp-warning))))
+        (concat
+         (propertize "LSP" 'face (if (lsp-workspaces)
+                                     'doom-modeline-lsp-success
+                                   'doom-modeline-lsp-warning))
+         (unless (directory-equal-p (lsp-workspace-root)
+                                    (doom-modeline-project-root))
+           (propertize "!" 'face 'doom-modeline-lsp-error)))))
 
 (add-hook 'lsp-before-initialize-hook #'doom-modeline-update-lsp)
 (add-hook 'lsp-after-initialize-hook #'doom-modeline-update-lsp)

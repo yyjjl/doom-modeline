@@ -462,7 +462,7 @@ LHS and RHS are lists of symbols of modeline segments defined with
   (let ((sym (intern (format "doom-modeline-format--%s" name))))
     `(defun ,sym ()
        ,(concat "Modeline: " (prin1-to-string segments))
-       ,(cons 'list (doom-modeline--prepare-segments segments)))))
+       ,(cl-list* 'list "" (doom-modeline--prepare-segments segments)))))
 
 (defsubst doom-modeline (key)
   "Return a mode-line configuration associated with KEY (a symbol).
@@ -559,16 +559,13 @@ See docs of `add-variable-watcher'."
 
 (defvar-local doom-modeline--project-detected-p nil)
 (defvar-local doom-modeline--project-root nil)
+(defvar-local doom-modeline--project-parent-path nil)
 (defsubst doom-modeline--project-root ()
   "Get the path to the root of your project.
 Return nil if no project was found."
   (unless doom-modeline--project-detected-p
     (setq doom-modeline--project-root
           (pcase doom-modeline-project-detection
-            ('ffip
-             (when (fboundp 'ffip-get-project-root-directory)
-               (let ((inhibit-message t))
-                 (ffip-get-project-root-directory))))
             ('projectile
              (when (fboundp 'projectile-project-root)
                (projectile-project-root)))
@@ -576,7 +573,11 @@ Return nil if no project was found."
              (when (fboundp 'project-current)
                (when-let ((project (project-current)))
                  (car (project-roots project))))))
-          doom-modeline--project-detected-p t))
+          doom-modeline--project-detected-p t)
+    (setq doom-modeline--project-parent-path
+          (abbreviate-file-name
+           (file-name-directory
+            (directory-file-name doom-modeline--project-root)))))
   doom-modeline--project-root)
 
 (defsubst doom-modeline-project-p ()

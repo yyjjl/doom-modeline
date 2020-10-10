@@ -90,43 +90,43 @@
 ;;
 
 (doom-modeline-def-modeline main
-  (bar window-number matches buffer-info remote-host checker lsp buffer-position misc-info buffer-encoding major-mode process vcs))
+  (bar window-number matches buffer-info remote-host checker lsp buffer-position buffer-encoding major-mode process vcs))
 
 (doom-modeline-def-modeline shell
-  (bar window-number matches buffer-info remote-host misc-info major-mode process))
+  (bar window-number matches buffer-info remote-host major-mode process))
 
 (doom-modeline-def-modeline minimal
   (bar matches buffer-info-simple media-info major-mode))
 
 (doom-modeline-def-modeline special
-  (bar window-number matches buffer-info buffer-position misc-info buffer-encoding major-mode process))
+  (bar window-number matches buffer-info buffer-position buffer-encoding major-mode process))
 
 (doom-modeline-def-modeline project
-  (bar window-number matches buffer-default-directory misc-info major-mode process))
+  (bar window-number matches buffer-default-directory major-mode process))
 
 (doom-modeline-def-modeline vcs
-  (bar window-number matches buffer-info buffer-position misc-info buffer-encoding major-mode process))
+  (bar window-number matches buffer-info buffer-position buffer-encoding major-mode process))
 
 (doom-modeline-def-modeline package
-  (bar window-number package misc-info major-mode process))
+  (bar window-number package major-mode process))
 
 (doom-modeline-def-modeline info
-  (bar window-number buffer-info info-nodes buffer-position misc-info buffer-encoding major-mode))
+  (bar window-number buffer-info info-nodes buffer-position buffer-encoding major-mode))
 
 (doom-modeline-def-modeline media
-  (bar window-number buffer-size buffer-info misc-info media-info major-mode process vcs))
+  (bar window-number buffer-size buffer-info media-info major-mode process vcs))
 
 (doom-modeline-def-modeline message
-  (bar window-number matches buffer-info-simple buffer-position misc-info buffer-encoding major-mode))
+  (bar window-number matches buffer-info-simple buffer-position buffer-encoding major-mode))
 
 (doom-modeline-def-modeline pdf
-  (bar window-number matches buffer-info pdf-pages misc-info major-mode process))
+  (bar window-number matches buffer-info pdf-pages major-mode process))
 
 (doom-modeline-def-modeline org-src
-  (bar window-number matches buffer-info-simple buffer-position misc-info buffer-encoding major-mode process))
+  (bar window-number matches buffer-info-simple buffer-position buffer-encoding major-mode process))
 
 (doom-modeline-def-modeline timemachine
-  (bar window-number matches git-timemachine buffer-position misc-info buffer-encoding major-mode))
+  (bar window-number matches git-timemachine buffer-position buffer-encoding major-mode))
 
 
 ;;
