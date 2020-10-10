@@ -5,7 +5,7 @@
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
 ;; Homepage: https://github.com/seagle0128/doom-modeline
 ;; Version: 3.1.0
-;; Package-Requires: ((emacs "25.1") (all-the-icons "2.2.0") (shrink-path "0.2.0") (dash "2.11.0"))
+;; Package-Requires: ((emacs "25.1") (dash "2.11.0"))
 ;; Keywords: faces mode-line
 
 ;; This file is not part of GNU Emacs.
@@ -89,72 +89,49 @@
 ;; Mode lines
 ;;
 
-(doom-modeline-def-modeline 'main
-  '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
-  '(objed-state misc-info persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding major-mode process vcs checker))
+(doom-modeline-def-modeline main
+  (bar window-number matches buffer-info remote-host checker lsp buffer-position misc-info buffer-encoding major-mode process vcs))
 
-(doom-modeline-def-modeline 'minimal
-  '(bar matches buffer-info-simple)
-  '(media-info major-mode))
+(doom-modeline-def-modeline shell
+  (bar window-number matches buffer-info remote-host misc-info major-mode process))
 
-(doom-modeline-def-modeline 'special
-  '(bar window-number modals matches buffer-info buffer-position word-count parrot selection-info)
-  '(objed-state misc-info battery irc-buffers debug minor-modes input-method indent-info buffer-encoding major-mode process))
+(doom-modeline-def-modeline minimal
+  (bar matches buffer-info-simple media-info major-mode))
 
-(doom-modeline-def-modeline 'project
-  '(bar window-number buffer-default-directory)
-  '(misc-info battery irc mu4e gnus github debug minor-modes input-method major-mode process))
+(doom-modeline-def-modeline special
+  (bar window-number matches buffer-info buffer-position misc-info buffer-encoding major-mode process))
 
-(doom-modeline-def-modeline 'dashboard
-  '(bar window-number buffer-default-directory-simple)
-  '(misc-info battery irc mu4e gnus github debug minor-modes input-method major-mode process))
+(doom-modeline-def-modeline project
+  (bar window-number matches buffer-default-directory misc-info major-mode process))
 
-(doom-modeline-def-modeline 'vcs
-  '(bar window-number modals matches buffer-info buffer-position parrot selection-info)
-  '(misc-info battery irc mu4e gnus github debug minor-modes buffer-encoding major-mode process))
+(doom-modeline-def-modeline vcs
+  (bar window-number matches buffer-info buffer-position misc-info buffer-encoding major-mode process))
 
-(doom-modeline-def-modeline 'package
-  '(bar window-number package)
-  '(misc-info major-mode process))
+(doom-modeline-def-modeline package
+  (bar window-number package misc-info major-mode process))
 
-(doom-modeline-def-modeline 'info
-  '(bar window-number buffer-info info-nodes buffer-position parrot selection-info)
-  '(misc-info buffer-encoding major-mode))
+(doom-modeline-def-modeline info
+  (bar window-number buffer-info info-nodes buffer-position misc-info buffer-encoding major-mode))
 
-(doom-modeline-def-modeline 'media
-  '(bar window-number buffer-size buffer-info)
-  '(misc-info media-info major-mode process vcs))
+(doom-modeline-def-modeline media
+  (bar window-number buffer-size buffer-info misc-info media-info major-mode process vcs))
 
-(doom-modeline-def-modeline 'message
-  '(bar window-number modals matches buffer-info-simple buffer-position word-count parrot selection-info)
-  '(objed-state misc-info battery debug minor-modes input-method indent-info buffer-encoding major-mode))
+(doom-modeline-def-modeline message
+  (bar window-number matches buffer-info-simple buffer-position misc-info buffer-encoding major-mode))
 
-(doom-modeline-def-modeline 'pdf
-  '(bar window-number matches buffer-info pdf-pages)
-  '(misc-info major-mode process vcs))
+(doom-modeline-def-modeline pdf
+  (bar window-number matches buffer-info pdf-pages misc-info major-mode process))
 
-(doom-modeline-def-modeline 'org-src
-  '(bar window-number modals matches buffer-info-simple buffer-position word-count parrot selection-info)
-  '(objed-state misc-info debug lsp minor-modes input-method indent-info buffer-encoding major-mode process checker))
+(doom-modeline-def-modeline org-src
+  (bar window-number matches buffer-info-simple buffer-position misc-info buffer-encoding major-mode process))
 
-(doom-modeline-def-modeline 'helm
-  '(bar helm-buffer-id helm-number helm-follow helm-prefix-argument)
-  '(helm-help))
-
-(doom-modeline-def-modeline 'timemachine
-  '(bar window-number matches git-timemachine buffer-position word-count parrot selection-info)
-  '(misc-info minor-modes indent-info buffer-encoding major-mode))
+(doom-modeline-def-modeline timemachine
+  (bar window-number matches git-timemachine buffer-position misc-info buffer-encoding major-mode))
 
 
 ;;
 ;; Interfaces
 ;;
-
-;;;###autoload
-(defun doom-modeline-init ()
-  "Initialize doom mode-line."
-  (doom-modeline-mode 1))
-(make-obsolete 'doom-modeline-init 'doom-modeline-mode "1.6.0")
 
 ;;;###autoload
 (defun doom-modeline-set-main-modeline (&optional default)
@@ -176,11 +153,6 @@ If DEFAULT is non-nil, set the default mode-line for all buffers."
 (defun doom-modeline-set-project-modeline ()
   "Set project mode-line."
   (doom-modeline-set-modeline 'project))
-
-;;;###autoload
-(defun doom-modeline-set-dashboard-modeline ()
-  "Set dashboard mode-line."
-  (doom-modeline-set-modeline 'dashboard))
 
 ;;;###autoload
 (defun doom-modeline-set-vcs-modeline ()
@@ -218,14 +190,14 @@ If DEFAULT is non-nil, set the default mode-line for all buffers."
   (doom-modeline-set-modeline 'org-src))
 
 ;;;###autoload
-(defun doom-modeline-set-helm-modeline (&rest _) ; To advice helm
-  "Set helm mode-line."
-  (doom-modeline-set-modeline 'helm))
-
-;;;###autoload
 (defun doom-modeline-set-timemachine-modeline ()
   "Set timemachine mode-line."
   (doom-modeline-set-modeline 'timemachine))
+
+;;;###autoload
+(defun doom-modeline-set-shell-modeline ()
+  "Set timemachine mode-line."
+  (doom-modeline-set-modeline 'shell))
 
 
 ;;
@@ -239,9 +211,6 @@ So it can be restored when `doom-modeline-mode' is disabled.")
 
 (defvar doom-modeline-mode-map (make-sparse-keymap))
 
-;; Suppress warnings
-(declare-function helm-display-mode-line 'helm)
-
 ;;;###autoload
 (define-minor-mode doom-modeline-mode
   "Toggle doom-modeline on or off."
@@ -251,8 +220,8 @@ So it can be restored when `doom-modeline-mode' is disabled.")
   :keymap doom-modeline-mode-map
   (if doom-modeline-mode
       (progn
-        (doom-modeline-refresh-bars)        ; Create bars
-        (doom-modeline-set-main-modeline)   ; Set mode-line for current buffer
+        (doom-modeline-refresh-bars)    ; Create bars
+        (doom-modeline-set-main-modeline) ; Set mode-line for current buffer
         (doom-modeline-set-main-modeline t) ; Set default mode-line
 
         ;; These buffers are already created and don't get modelines
@@ -262,24 +231,22 @@ So it can be restored when `doom-modeline-mode' is disabled.")
                 (doom-modeline-set-main-modeline))))
 
         ;; Add hooks
+        (dolist (hook '(comint-mode-hook
+                        term-mode-hook
+                        vterm-mode-hook
+                        compilation-mode-hook))
+          (add-hook hook #'doom-modeline-set-shell-modeline))
         (add-hook 'Info-mode-hook #'doom-modeline-set-info-modeline)
         (add-hook 'dired-mode-hook #'doom-modeline-set-project-modeline)
-        (add-hook 'dashboard-mode-hook #'doom-modeline-set-dashboard-modeline)
         (add-hook 'image-mode-hook #'doom-modeline-set-media-modeline)
         (add-hook 'message-mode-hook #'doom-modeline-set-message-modeline)
         (add-hook 'git-commit-mode-hook #'doom-modeline-set-message-modeline)
         (add-hook 'magit-mode-hook #'doom-modeline-set-vcs-modeline)
-        (add-hook 'circe-mode-hook #'doom-modeline-set-special-modeline)
-        (add-hook 'erc-mode-hook #'doom-modeline-set-special-modeline)
-        (add-hook 'rcirc-mode-hook #'doom-modeline-set-special-modeline)
         (add-hook 'pdf-view-mode-hook #'doom-modeline-set-pdf-modeline)
         (add-hook 'org-src-mode-hook #'doom-modeline-set-org-src-modeline)
         (add-hook 'git-timemachine-mode-hook #'doom-modeline-set-timemachine-modeline)
         (add-hook 'paradox-menu-mode-hook #'doom-modeline-set-package-modeline)
-        (add-hook 'xwidget-webkit-mode-hook #'doom-modeline-set-minimal-modeline)
-
-        ;; Add advices
-        (advice-add #'helm-display-mode-line :after #'doom-modeline-set-helm-modeline))
+        (add-hook 'xwidget-webkit-mode-hook #'doom-modeline-set-minimal-modeline))
     (progn
       ;; Restore mode-line
       (setq mode-line-format doom-modeline--default-format)
@@ -290,24 +257,22 @@ So it can be restored when `doom-modeline-mode' is disabled.")
               (setq mode-line-format doom-modeline--default-format))))
 
       ;; Remove hooks
+      (dolist (hook '(comint-mode-hook
+                      term-mode-hook
+                      vterm-mode-hook
+                      compilation-mode-hook))
+        (remove-hook hook #'doom-modeline-set-shell-modeline))
       (remove-hook 'Info-mode-hook #'doom-modeline-set-info-modeline)
       (remove-hook 'dired-mode-hook #'doom-modeline-set-project-modeline)
-      (remove-hook 'dashboard-mode-hook #'doom-modeline-set-dashboard-modeline)
       (remove-hook 'image-mode-hook #'doom-modeline-set-media-modeline)
       (remove-hook 'message-mode-hook #'doom-modeline-set-message-modeline)
       (remove-hook 'git-commit-mode-hook #'doom-modeline-set-message-modeline)
       (remove-hook 'magit-mode-hook #'doom-modeline-set-vcs-modeline)
-      (remove-hook 'circe-mode-hook #'doom-modeline-set-special-modeline)
-      (remove-hook 'erc-mode-hook #'doom-modeline-set-special-modeline)
-      (remove-hook 'rcirc-mode-hook #'doom-modeline-set-special-modeline)
       (remove-hook 'pdf-view-mode-hook #'doom-modeline-set-pdf-modeline)
       (remove-hook 'org-src-mode-hook #'doom-modeline-set-org-src-modeline)
       (remove-hook 'git-timemachine-mode-hook #'doom-modeline-set-timemachine-modeline)
       (remove-hook 'paradox-menu-mode-hook #'doom-modeline-set-package-modeline)
-      (remove-hook 'xwidget-webkit-mode-hook #'doom-modeline-set-minimal-modeline)
-
-      ;; Remove advices
-      (advice-remove #'helm-display-mode-line #'doom-modeline-set-helm-modeline))))
+      (remove-hook 'xwidget-webkit-mode-hook #'doom-modeline-set-minimal-modeline))))
 
 (provide 'doom-modeline)
 
