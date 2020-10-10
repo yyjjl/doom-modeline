@@ -462,7 +462,7 @@ LHS and RHS are lists of symbols of modeline segments defined with
   (let ((sym (intern (format "doom-modeline-format--%s" name))))
     `(defun ,sym ()
        ,(concat "Modeline: " (prin1-to-string segments))
-       ,(cons 'list (doom-modeline--prepare-segments segments)))))
+       ,(cl-list* 'list "" (doom-modeline--prepare-segments segments)))))
 
 (defsubst doom-modeline (key)
   "Return a mode-line configuration associated with KEY (a symbol).
