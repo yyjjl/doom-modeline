@@ -196,7 +196,7 @@ directory, the file name, and its state (modified, read-only or non-existent)."
                                 (t 'mode-line-inactive)))))
 
 (doom-modeline-def-segment buffer-default-directory
-  "Displays `default-directory' with the icon and state . This is for special buffers
+  "Displays `default-directory' . This is for special buffers
 like the scratch buffer where knowing the current project directory is important."
   (concat
    (doom-modeline-spc)
@@ -300,7 +300,7 @@ buffer where knowing the current project directory is important."
 
 (defvar-local doom-modeline--vcs-state nil)
 (defun doom-modeline-update-vcs-state (&rest _)
-  "Update icon of vcs state in mode-line."
+  "Update vcs state in mode-line."
   (setq doom-modeline--vcs-state
         (when (and vc-mode buffer-file-name)
           (let* ((backend (vc-backend buffer-file-name))
@@ -353,8 +353,8 @@ buffer where knowing the current project directory is important."
         (concat
          (if active
              state
-           (doom-modeline-propertize-icon state 'mode-line-inactive))
-         (doom-modeline-vspc)))
+           (propertize state 'face 'mode-line-inactive))
+         (doom-modeline-spc)))
        (if active
            text
          (propertize text 'face 'mode-line-inactive))
