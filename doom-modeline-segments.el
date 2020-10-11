@@ -665,9 +665,13 @@ See `mode-line-percent-position'.")
 (defun doom-modeline-update-lsp (&rest _)
   "Update `lsp-mode' state."
   (setq doom-modeline--lsp
-        (propertize "LSP" 'face (if (lsp-workspaces)
-                                    'doom-modeline-lsp-success
-                                  'doom-modeline-lsp-warning))))
+        (concat
+         (propertize "LSP" 'face (if (lsp-workspaces)
+                                     'doom-modeline-lsp-success
+                                   'doom-modeline-lsp-warning))
+         (unless (directory-equal-p (lsp-workspace-root)
+                                    (doom-modeline-project-root))
+           (propertize "!" 'face 'doom-modeline-lsp-error)))))
 
 (add-hook 'lsp-before-initialize-hook #'doom-modeline-update-lsp)
 (add-hook 'lsp-after-initialize-hook #'doom-modeline-update-lsp)
