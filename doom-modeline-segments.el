@@ -83,6 +83,7 @@
 (declare-function lsp-describe-session 'lsp-mode)
 (declare-function lsp-workspace-folders-open 'lsp-mode)
 (declare-function lsp-workspace-restart 'lsp-mode)
+(declare-function lsp-workspace-root 'lsp-mode)
 (declare-function lsp-workspace-shutdown 'lsp-mode)
 (declare-function lsp-workspaces 'lsp-mode)
 (declare-function mc/num-cursors 'multiple-cursors-core)
@@ -577,7 +578,10 @@ level."
 By default, this shows the information specified by `global-mode-string'."
   (when (and (doom-modeline--active)
              (not doom-modeline--limited-width-p))
-    '("" mode-line-misc-info)))
+    `("" mode-line-misc-info
+      ,(propertize
+        (or doom-modeline--project-parent-path default-directory)
+        'face font-lock-comment-face))))
 
 
 ;;
