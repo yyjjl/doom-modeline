@@ -578,9 +578,10 @@ level."
 By default, this shows the information specified by `global-mode-string'."
   (when (and (doom-modeline--active)
              (not doom-modeline--limited-width-p))
-    `("" mode-line-misc-info
+    `(t
+      mode-line-misc-info
       ,(propertize
-        (or doom-modeline--project-parent-path default-directory)
+        (concat " " (or doom-modeline--project-parent-path default-directory))
         'face font-lock-comment-face))))
 
 
