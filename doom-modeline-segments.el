@@ -576,13 +576,11 @@ level."
 (doom-modeline-def-segment misc-info
   "Mode line construct for miscellaneous information.
 By default, this shows the information specified by `global-mode-string'."
-  (when (and (doom-modeline--active)
-             (not doom-modeline--limited-width-p))
-    `(t
-      mode-line-misc-info
+  (when (doom-modeline--active)
+    `((t mode-line-misc-info)
       ,(propertize
-        (concat " " (or doom-modeline--project-parent-path default-directory))
-        'face font-lock-comment-face))))
+        (or doom-modeline--project-parent-path default-directory)
+        'face font-lock-doc-face))))
 
 
 ;;
