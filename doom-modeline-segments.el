@@ -79,11 +79,11 @@
 (declare-function image-get-display-property 'image-mode)
 (declare-function jsonrpc--request-continuations 'jsonrpc)
 (declare-function jsonrpc-last-error 'jsonrpc)
-(declare-function lsp--workspace-print 'lsp-mode)
+(declare-function lsp--workspace-root 'lsp-mode)
 (declare-function lsp-describe-session 'lsp-mode)
 (declare-function lsp-workspace-folders-open 'lsp-mode)
 (declare-function lsp-workspace-restart 'lsp-mode)
-(declare-function lsp-workspace-root 'lsp-mode)
+(declare-function lsp-workspaces 'lsp-mode)
 (declare-function lsp-workspace-shutdown 'lsp-mode)
 (declare-function lsp-workspaces 'lsp-mode)
 (declare-function mc/num-cursors 'multiple-cursors-core)
@@ -576,11 +576,10 @@ level."
 (doom-modeline-def-segment misc-info
   "Mode line construct for miscellaneous information.
 By default, this shows the information specified by `global-mode-string'."
-  (when (doom-modeline--active)
-    `((t mode-line-misc-info)
-      ,(propertize
-        (or doom-modeline--project-parent-path default-directory)
-        'face font-lock-doc-face))))
+  `((t mode-line-misc-info)
+    ,(propertize
+      (or doom-modeline--project-parent-path default-directory)
+      'face font-lock-doc-face)))
 
 
 ;;
@@ -672,7 +671,7 @@ See `mode-line-percent-position'.")
          (propertize "LSP" 'face (if (lsp-workspaces)
                                      'doom-modeline-lsp-success
                                    'doom-modeline-lsp-warning))
-         (unless (directory-equal-p (lsp-workspace-root)
+         (unless (directory-equal-p (ignore-errors (lsp--workspace-root (car (lsp-workspaces))))
                                     (doom-modeline-project-root))
            (propertize "!" 'face 'doom-modeline-lsp-error)))))
 
