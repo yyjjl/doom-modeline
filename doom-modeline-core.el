@@ -420,7 +420,7 @@ then this function does nothing."
 
 (defmacro doom-modeline-def-segment (name &rest body)
   "Defines a modeline segment NAME with BODY and byte compiles it."
-  (declare (indent defsubst) (doc-string 2))
+  (declare (indent defun) (doc-string 2))
   (let ((sym (intern (format "doom-modeline-segment--%s" name)))
         (docstring (if (stringp (car body))
                        (pop body)

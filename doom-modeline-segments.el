@@ -104,6 +104,8 @@
 ;; Buffer information
 ;;
 
+(defvar-local doom-modeline--remote-host 'unset)
+
 (defun doom-modeline-update-buffer-file-state (&rest _)
   "Update the buffer or file state in mode-line."
   (concat
@@ -115,7 +117,9 @@
           (buffer-modified-p))
      (propertize "%1*" 'face '(:inherit doom-modeline-buffer-modified :weight bold)))
 
-    ((and buffer-file-name
+    ((and buffer-file-name ;; donot remove call file-exists-p when file is on remote host
+          (or (not doom-modeline--remote-host)
+              (eq doom-modeline--remote-host 'unset))
           (not (file-exists-p buffer-file-name)))
      (propertize "!" 'face 'doom-modeline-urgent))
 
@@ -253,11 +257,14 @@ buffer where knowing the current project directory is important."
 
 (doom-modeline-def-segment remote-host
   "Hostname for remote buffers."
-  (when-let ((host (and default-directory
-                        (file-remote-p default-directory 'host))))
-    (propertize
-     (concat "@" host)
-     'face (if (doom-modeline--active) 'doom-modeline-host 'mode-line-inactive))))
+  (or (when (not (eq doom-modeline--remote-host 'unset))
+        doom-modeline--remote-host)
+      (setq doom-modeline--remote-host
+            (when-let ((host (and default-directory
+                                  (file-remote-p default-directory 'host))))
+              (propertize
+               (concat "@" host)
+               'face (if (doom-modeline--active) 'doom-modeline-host 'mode-line-inactive))))))
 
 
 ;;
