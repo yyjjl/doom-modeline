@@ -670,35 +670,18 @@ See `mode-line-percent-position'.")
 ;; LSP
 ;;
 
-(defvar-local doom-modeline--lsp nil)
-(defun doom-modeline-update-lsp (&rest _)
-  "Update `lsp-mode' state."
-  (when (bound-and-true-p lsp-mode)
-    (setq doom-modeline--lsp
-          (concat
-           (propertize "LSP" 'face (if (lsp-workspaces)
-                                       'doom-modeline-lsp-success
-                                     'doom-modeline-lsp-warning))
-           (unless (directory-equal-p (ignore-errors (lsp--workspace-root (car (lsp-workspaces))))
-                                      (doom-modeline-project-root))
-             (propertize "!" 'face 'doom-modeline-lsp-error))))))
-
-(add-hook 'lsp-before-initialize-hook #'doom-modeline-update-lsp)
-(add-hook 'lsp-after-initialize-hook #'doom-modeline-update-lsp)
-(add-hook 'lsp-after-uninitialized-functions #'doom-modeline-update-lsp)
-(add-hook 'lsp-before-open-hook #'doom-modeline-update-lsp)
-(add-hook 'lsp-after-open-hook #'doom-modeline-update-lsp)
-
 (doom-modeline-def-segment lsp
   "The LSP server state."
   (when (and doom-modeline-lsp
-             (not doom-modeline--limited-width-p)
-             doom-modeline--lsp)
+             (bound-and-true-p lsp-managed-mode)
+             (not doom-modeline--limited-width-p))
     (concat
      (doom-modeline-spc)
-     (if (doom-modeline--active)
-         doom-modeline--lsp
-       (propertize doom-modeline--lsp 'face 'mode-line-inactive))
+     (propertize "LSP" 'face (if (doom-modeline--active)
+                                 (if (lsp-workspaces)
+                                     'doom-modeline-lsp-success
+                                   'doom-modeline-lsp-warning)
+                               'mode-line-inactive))
      (doom-modeline-spc))))
 
 ;;
