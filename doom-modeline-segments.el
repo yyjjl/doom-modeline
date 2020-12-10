@@ -722,6 +722,22 @@ See `mode-line-percent-position'.")
          (propertize info 'face 'mode-line-inactive))))))
 
 ;;
+;; Debug
+;;
+
+(doom-modeline-def-segment debug
+  "The current debug state."
+  (let ((dap (ignore-errors (dap-mode-line)))
+        (edebug (bound-and-true-p edebug-mode)))
+    (propertize
+     (concat (when dap (concat dap " "))
+             (when (or edebug debug-on-error debug-on-quit) " ")
+             (when edebug "Edebug ")
+             (when debug-on-error "On-Error ")
+             (when debug-on-quit "On-Quit "))
+     'face 'doom-modeline-urgent)))
+
+;;
 ;; Git timemachine
 ;;
 
