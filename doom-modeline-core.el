@@ -104,38 +104,9 @@ Specify another one if you encounter the issue."
                  (const :tag "Disable" nil))
   :group 'doom-modeline)
 
-(defcustom doom-modeline-buffer-encoding t
-  "Whether display the buffer encoding."
-  :type 'boolean
-  :group 'doom-modeline)
-
-(defcustom doom-modeline-number-limit 99
-  "The maximum number displayed for notifications."
-  :type 'integer
-  :group 'doom-modeline)
-
 (defcustom doom-modeline-vcs-max-length 12
   "The maximum displayed length of the branch name of version control."
   :type 'integer
-  :group 'doom-modeline)
-
-(defcustom doom-modeline-repl t
-  "Whether display the `repl' state.
-
-Non-nil to display in the mode-line."
-  :type 'boolean
-  :group 'doom-modeline)
-
-(defcustom doom-modeline-lsp t
-  "Whether display the `lsp' state.
-
-Non-nil to display in the mode-line."
-  :type 'boolean
-  :group 'doom-modeline)
-
-(defcustom doom-modeline-env-version t
-  "Whether display the environment version."
-  :type 'boolean
   :group 'doom-modeline)
 
 ;;
@@ -151,11 +122,6 @@ Non-nil to display in the mode-line."
 (defface doom-modeline-spc-face
   '((t (:inherit mode-line)))
   "Face used for the white space."
-  :group 'doom-modeline-faces)
-
-(defface doom-modeline-vspc-face
-  '((t (:inherit variable-pitch)))
-  "Face used for the variable white space."
   :group 'doom-modeline-faces)
 
 (defface doom-modeline-buffer-path
@@ -213,11 +179,6 @@ Non-nil to display in the mode-line."
   "Face for input method in the mode-line."
   :group 'doom-modeline-faces)
 
-(defface doom-modeline-input-method-alt
-  '((t (:inherit (font-lock-doc-face bold) :slant normal)))
-  "Alternative face for input method in the mode-line."
-  :group 'doom-modeline-faces)
-
 (defface doom-modeline-debug
   '((t (:inherit (font-lock-doc-face bold) :slant normal)))
   "Face for debug-level messages in the mode-line. Used by vcs, checker, etc."
@@ -238,11 +199,6 @@ Non-nil to display in the mode-line."
   "Face for errors in the mode-line. Used by vcs, checker, etc."
   :group 'doom-modeline-faces)
 
-(defface doom-modeline-unread-number
-  '((t (:slant italic :weight normal)))
-  "Face for unread number in the mode-line. Used by GitHub, mu4e, etc."
-  :group 'doom-modeline-faces)
-
 (defface doom-modeline-bar
   '((t (:inherit highlight)))
   "The face used for the left-most bar in the mode-line of an active window."
@@ -260,16 +216,6 @@ Non-nil to display in the mode-line."
      (:background "#915B2D")))
   "Face to use for the mode-line while debugging."
   :group 'doom-modeline)
-
-(defface doom-modeline-repl-success
-  '((t (:inherit success :weight normal)))
-  "Face for REPL success state."
-  :group 'doom-modeline-faces)
-
-(defface doom-modeline-repl-warning
-  '((t (:inherit warning :weight normal)))
-  "Face for REPL warning state."
-  :group 'doom-modeline-faces)
 
 (defface doom-modeline-lsp-success
   '((t (:inherit success :weight normal)))
