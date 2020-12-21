@@ -57,8 +57,6 @@
 (declare-function mc/num-cursors 'multiple-cursors-core)
 (declare-function org-edit-src-save 'org-src)
 (declare-function pdf-cache-number-of-pages 'pdf-cache)
-(declare-function popup-create 'popup)
-(declare-function popup-delete 'popup)
 (declare-function warning-numeric-level 'warnings)
 (declare-function winum--clear-mode-line 'winum)
 (declare-function winum--install-mode-line 'winum)
@@ -81,13 +79,6 @@
     ((and buffer-file-name
           (buffer-modified-p))
      (propertize "%1*" 'face '(:inherit doom-modeline-buffer-modified :weight bold)))
-
-    ((and buffer-file-name ;; donot remove call file-exists-p when file is on remote host
-          (or (not doom-modeline--remote-host)
-              (eq doom-modeline--remote-host 'unset))
-          (not (file-exists-p buffer-file-name)))
-     (propertize "!" 'face 'doom-modeline-urgent))
-
     (t ""))
    (when (or (buffer-narrowed-p)
              (bound-and-true-p dired-narrow-mode))
@@ -97,11 +88,7 @@
 (defun doom-modeline-update-buffer-file-name (&rest _)
   "Update buffer file name in mode-line."
   (setq doom-modeline--buffer-file-name
-        (ignore-errors
-          (save-match-data
-            (if buffer-file-name
-                (doom-modeline-buffer-file-name)
-              (propertize "%b" 'face 'doom-modeline-buffer-file))))))
+        (ignore-errors (doom-modeline-buffer-file-name))))
 
 (add-hook 'find-file-hook #'doom-modeline-update-buffer-file-name)
 (add-hook 'after-save-hook #'doom-modeline-update-buffer-file-name)
@@ -109,12 +96,6 @@
 (advice-add #'not-modified :after #'doom-modeline-update-buffer-file-name)
 (advice-add #'rename-buffer :after #'doom-modeline-update-buffer-file-name)
 (advice-add #'set-visited-file-name :after #'doom-modeline-update-buffer-file-name)
-(advice-add #'pop-to-buffer :after #'doom-modeline-update-buffer-file-name)
-(advice-add #'undo :after #'doom-modeline-update-buffer-file-name)
-(advice-add #'fill-paragraph :after #'doom-modeline-update-buffer-file-name)
-(advice-add #'popup-create :after #'doom-modeline-update-buffer-file-name)
-(advice-add #'popup-delete :after #'doom-modeline-update-buffer-file-name)
-(advice-add #'org-edit-src-save :after #'doom-modeline-update-buffer-file-name)
 
 (defsubst doom-modeline--buffer-state ()
   "current buffer state."
@@ -558,54 +539,16 @@ By default, this shows the information specified by `global-mode-string'."
 ;; Position
 ;;
 
-;; Be compatible with Emacs 25.
-(defvar doom-modeline-column-zero-based
-  (if (boundp 'column-number-indicator-zero-based)
-      column-number-indicator-zero-based
-    t)
-  "When non-nil, mode line displays column numbers zero-based.
-See `column-number-indicator-zero-based'.")
-
-(defvar doom-modeline-percent-position
-  (if (boundp 'mode-line-percent-position)
-      mode-line-percent-position
-    '(-3 "%p"))
-  "Specification of \"percentage offset\" of window through buffer.
-See `mode-line-percent-position'.")
-
-(doom-modeline-add-variable-watcher
- 'column-number-indicator-zero-based
- (lambda (_sym val op _where)
-   (when (eq op 'set)
-     (setq doom-modeline-column-zero-based val))))
-
-(doom-modeline-add-variable-watcher
- 'mode-line-percent-position
- (lambda (_sym val op _where)
-   (when (eq op 'set)
-     (setq doom-modeline-percent-position val))))
-
 (doom-modeline-def-segment buffer-position
   "The buffer position information."
-  (let* ((active (doom-modeline--active))
-         (lc '(line-number-mode
-               (column-number-mode
-                (doom-modeline-column-zero-based "%l:%c" "%l:%C")
-                "%l")
-               (column-number-mode (doom-modeline-column-zero-based ":%c" ":%C"))))
-         (face (if active 'mode-line 'mode-line-inactive)))
-    (concat
-     (doom-modeline-spc)
-
-     (propertize (format-mode-line lc) 'face face)
-
-     (when doom-modeline-percent-position
-       (concat
-        (doom-modeline-spc)
-        (propertize (format-mode-line '("" doom-modeline-percent-position "%%"))
-                    'face face)))
-     (when (or line-number-mode column-number-mode doom-modeline-percent-position)
-       (doom-modeline-spc)))))
+  (let ((face (if (doom-modeline--active) 'mode-line 'mode-line-inactive)))
+    `((:propertize
+       (line-number-mode
+        ((column-number-mode " %l:%c" " %l")
+         " "
+         mode-line-percent-position)
+        ((column-number-mode (t " %c " mode-line-percent-position))))
+       face ,face))))
 
 ;;
 ;; Info

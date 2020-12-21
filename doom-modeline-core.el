@@ -537,21 +537,12 @@ Return `default-directory' if no project was found."
 
 (defsubst doom-modeline-buffer-file-name ()
   "Propertized variable `buffer-file-name'."
-  (let* ((buffer-file-name
-          (file-local-name (or (buffer-file-name (buffer-base-buffer)) "")))
-         (file-name
-          (doom-modeline--buffer-file-name buffer-file-name)))
-
-    (propertize (if (string-empty-p file-name)
-                    (propertize "%b" 'face 'doom-modeline-buffer-file)
-                  file-name)
-                'mouse-face 'mode-line-highlight
-                'help-echo (concat buffer-file-truename
-                                   (unless (string= (file-name-nondirectory buffer-file-truename)
-                                                    (buffer-name))
-                                     (concat "\n" (buffer-name)))
-                                   "\nmouse-1: Previous buffer\nmouse-3: Next buffer")
-                'local-map mode-line-buffer-identification-keymap)))
+  (let ((file-name
+         (doom-modeline--buffer-file-name
+          (file-local-name (or (buffer-file-name (buffer-base-buffer)) "")))))
+    (if (string-empty-p file-name)
+        (propertize "%b" 'face 'doom-modeline-buffer-file)
+      file-name)))
 
 (defsubst doom-modeline--buffer-file-name (file-path)
   "Propertized variable `buffer-file-name' given by FILE-PATH.
