@@ -78,8 +78,7 @@
 
     ((and buffer-file-name
           (buffer-modified-p))
-     (propertize "%1*" 'face '(:inherit doom-modeline-buffer-modified :weight bold)))
-    (t ""))
+     (propertize "%1*" 'face '(:inherit doom-modeline-buffer-modified :weight bold))))
    (when (or (buffer-narrowed-p)
              (bound-and-true-p dired-narrow-mode))
      (propertize "><" 'face 'doom-modeline-warning))))
@@ -88,7 +87,11 @@
 (defun doom-modeline-update-buffer-file-name (&rest _)
   "Update buffer file name in mode-line."
   (setq doom-modeline--buffer-file-name
-        (ignore-errors (doom-modeline-buffer-file-name))))
+        (if buffer-file-name
+            (ignore-errors
+              (doom-modeline--buffer-file-name
+               (file-local-name (or (buffer-file-name (buffer-base-buffer)) ""))))
+          (propertize "%b" 'face 'doom-modeline-buffer-file))))
 
 (add-hook 'find-file-hook #'doom-modeline-update-buffer-file-name)
 (add-hook 'after-save-hook #'doom-modeline-update-buffer-file-name)
