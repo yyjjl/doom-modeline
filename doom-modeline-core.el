@@ -535,15 +535,6 @@ Return nil if no project was found."
 Return `default-directory' if no project was found."
   (or (doom-modeline--project-root) default-directory))
 
-(defsubst doom-modeline-buffer-file-name ()
-  "Propertized variable `buffer-file-name'."
-  (let ((file-name
-         (doom-modeline--buffer-file-name
-          (file-local-name (or (buffer-file-name (buffer-base-buffer)) "")))))
-    (if (string-empty-p file-name)
-        (propertize "%b" 'face 'doom-modeline-buffer-file)
-      file-name)))
-
 (defsubst doom-modeline--buffer-file-name (file-path)
   "Propertized variable `buffer-file-name' given by FILE-PATH.
 
@@ -567,9 +558,7 @@ Example:
           relative-path))
       'face 'doom-modeline-buffer-path)
      ;; File name
-     (propertize
-      (file-name-nondirectory file-path)
-      'face 'doom-modeline-buffer-file))))
+     (propertize (file-name-nondirectory file-path) 'face 'doom-modeline-buffer-file))))
 
 (provide 'doom-modeline-core)
 

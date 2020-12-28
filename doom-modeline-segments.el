@@ -90,7 +90,7 @@
         (if buffer-file-name
             (ignore-errors
               (doom-modeline--buffer-file-name
-               (file-local-name (or (buffer-file-name (buffer-base-buffer)) ""))))
+               (file-local-name (file-truename (or (buffer-file-name (buffer-base-buffer)) "")))))
           (propertize "%b" 'face 'doom-modeline-buffer-file))))
 
 (add-hook 'find-file-hook #'doom-modeline-update-buffer-file-name)
