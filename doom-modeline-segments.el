@@ -130,6 +130,8 @@
   "Combined information about the current buffer, including the current working
 directory, the file name, and its state (modified, read-only or non-existent)."
   (let ((name (concat
+               (when (buffer-base-buffer)
+                 "[clone]")
                "%["
                (doom-modeline--buffer-state)
                (doom-modeline--buffer-name)
